@@ -1,0 +1,26 @@
+---
+
+# Username of the user under WSL
+lnx_user:     "{{ first_name | lower | regex_replace('[-_]', '') }}{{ last_name | lower | regex_replace('[-_]', '') }}"
+
+# Username of the user under Windows
+win_user:     "{{ ((first_name | title) + (last_name | title))[:20] }}"
+
+# Configuration of GIT user and email
+git_username: "{{ first_name | title }} {{ last_name | title }}"
+git_email:    "{{ first_name | lower | regex_replace('[-_]', '') }}{{ last_name | lower | regex_replace('[-_]', '') }}@quantexa.com"
+
+# Main user definition
+main_user_def:
+  username:    "{{ lnx_user }}"
+  bashrc:      "{{ lnx_user_bashrc }}"
+  shell:       /bin/bash
+
+# User configuration
+system_users:
+ - "{{ main_user_def | combine(main_user_ssh) }}"
+
+# Same as above but the subset used by wsl-config only
+wsl_config_users:
+ - username:     "{{ lnx_user }}"
+   win_username: "{{ win_user }}"

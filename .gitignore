@@ -1,0 +1,15 @@
+__pycache__/
+.gradle/
+.history/
+.metals/
+.vscode/
+
+*.retry
+!.gitkeep
+
+group_vars/all/user.yml
+host_vars/linux/*
+host_vars/windows/*
+
+secrets.*
+vault.txt

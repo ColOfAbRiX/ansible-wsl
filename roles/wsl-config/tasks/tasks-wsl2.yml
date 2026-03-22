@@ -1,0 +1,20 @@
+---
+
+- set_fact:
+    wsl_config_etc_network_generateResolvConf: "false"
+    wsl_config_wsl_resolveConf:
+     - { "nameserver": "8.8.8.8" }
+  tags: wsl-config
+
+- name: "Set templates"
+  template:
+    src:   "etc/{{ item }}.j2"
+    dest:  "/etc/{{ item }}"
+    owner: root
+    group: root
+    mode:  '0644'
+  with_items:
+   - wsl.conf
+   - resolv.conf
+   - hosts
+  tags: wsl-config

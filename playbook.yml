@@ -1,0 +1,58 @@
+---
+
+- name: WSL Configuration Playbook
+  hosts: wsl_installations
+  become: true
+  gather_facts: true
+
+  pre_tasks:
+   - name: "Check for empty variables"
+     assert:
+       that:
+        - first_name                | default("") | trim != ""
+        - last_name                 | default("") | trim != ""
+        - lnx_user                  | default("") | trim != ""
+        - win_user                  | default("") | trim != ""
+        - wsl_hostname              | default("") | trim != ""
+        - ansible_sudo_pass         | default("") | trim != ""
+        - ssh_key_passphrase        | default("") | trim != ""
+       msg: "All required variables must have a value"
+     tags: always
+
+   - name: "Update Apt cache"
+     apt:
+       update_cache: true
+     changed_when: false
+     ignore_errors: true
+     tags: always
+
+  roles:
+    # WSL Configuration
+    - role: wsl-config
+      wsl_config_wsl_hostname: "{{ wsl_hostname }}"
+    # - role: java
+    # - role: ssl-certs
+    # - role: bash
+    #   bash_users: "{{ system_users }}"
+    # - role: openssh
+    #   ssh_agent_enabled: "{{ not wsl_keeagent_enabled | default(False) | bool }}"
+    # - role: ssh-keys
+    #   ssh_user_keys: "{{ system_users }}"
+    #   when: not wsl_keeagent_enabled | default(False) | bool
+    # - role: wsl-keeagent
+    #   when: wsl_keeagent_enabled | default(False) | bool
+    # # - role: gcloudsdk
+    # - role: scala
+    # - role: docker
+    # - role: nodejs
+    # - role: gradle
+    # - role: dev-scripts
+
+  post_tasks:
+   - name: "Apt cleanups"
+     apt:
+       update_cache: false
+       autoclean: true
+       autoremove: true
+     changed_when: false
+     tags: always
