@@ -1,30 +1,96 @@
 ---
 # defaults file for wsl-win-integration
 
-wsl_config_wsl_hostname:       ''
-wsl_config_win_home_root:      "/mnt/c/Users"
-wsl_config_win_user_appdata:   "{{ lookup('env','HOME') }}/AppData/Roaming"
+wsl_config_wsl_hostname: ""
+wsl_config_win_home_root: "/mnt/c/Users"
 wsl_config_integrate_services: true
-
-# /etc/wsl.conf
-wsl_config_etc_automount_enabled:          "true"
-wsl_config_etc_automount_options:          "metadata,umask=22,fmask=11"
-wsl_config_etc_automount_root:             ''
-wsl_config_etc_automount_mountFsTab:       ''
-wsl_config_etc_network_generateHosts:      "false"
-wsl_config_etc_network_generateResolvConf: "true"
-
-# /etc/hosts
-wsl_config_hosts: []
-#  - addr: 192.168.0.1
-#    fqdn: test.example.com
-#    short: test
 
 wsl_config_users: []
 #  - username: linuxusername
 #    win_username: WindowsUsername
 #    # Optionals
 #    win_home_path: /mnt/c/Users/WindowsUsername
+
+# /etc/wsl.conf - See https://learn.microsoft.com/en-us/windows/wsl/wsl-config#set-wsl-launch-settings
+wsl_config_wsl_conf:
+  # Automount Settings - Configure mounting of Windows drives
+  automount:
+    # Enable automounting of Windows drives
+    enabled: "true"
+    # Also mount drives listed in /etc/fstab
+    mountFsTab: ""
+    # Mount point under which Windows drives will be available
+    root: ""
+    # Default mount options
+    options: "metadata,umask=22,fmask=11"
+
+  # Network Settings - Control DNS and hosts file generation
+  network:
+    # Automatically generate /etc/hosts
+    generateHosts: "false"
+    # Automatically generate /etc/resolv.conf
+    generateResolvConf: "true"
+
+  # # Interoperability Settings - Control Windows/Linux interoperability
+  # interop:
+  #   # Enable interoperability with Windows
+  #   enabled: "true"
+  #   # Add Windows PATH to Linux PATH
+  #   appendWindowsPath: "true"
+
+  # # User Settings - Default user for WSL
+  # user:
+  #   # Default user to launch WSL with
+  #   default: ""
+
+  # Boot Settings - Commands and services to run at boot
+  boot:
+    systemd: "true"
+  #   # Command to run when WSL instance boots
+  #   command: ""
+  #   # Windows service to start when WSL boots
+  #   service: ""
+
+  # # GPU Settings - GPU passthrough configuration (WSL2)
+  # gpu:
+  #   # Enable GPU access from WSL
+  #   enabled: "true"
+  #   renderOffload:
+  #     # Enable GPU render offload
+  #     enabled: "false"
+  #     # GPU render offload position (e.g., "primary")
+  #     position: ""
+
+  # # Time Settings - Time synchronization
+  # time:
+  #   # Enable time synchronization with Windows
+  #   enabled: "true"
+
+  # # WSL2 Settings - Memory, processor, and swap configuration (WSL2 only)
+  # wsl2:
+  #   # Memory limit in MB (e.g., "4096")
+  #   memory: ""
+  #   # Number of processors (e.g., "2")
+  #   processors: ""
+  #   # Swap size in MB (e.g., "2048")
+  #   swap: ""
+  #   # Path to swap file (e.g., "/mnt/c/swap.vhdx")
+  #   swapFile: ""
+  #   # Forward localhost connections from Windows to WSL2
+  #   localhostForwarding: "true"
+  #   # Additional kernel command line parameters
+  #   kernelCommandLine: ""
+
+  # # Experimental Features - Enable experimental WSL features
+  # experimental:
+  #   # Additional experimental keys can be added as needed
+  #   enabled: "false"
+
+# /etc/hosts
+wsl_config_hosts: []
+#  - addr: 192.168.0.1
+#    fqdn: test.example.com
+#    short: test
 
 # /etc/resolve.conf
 wsl_config_wsl_resolveConf: []

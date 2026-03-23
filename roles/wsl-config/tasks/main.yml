@@ -1,125 +1,56 @@
 ---
-# tasks file for wsl-win-integration
-
 - name: "Require Correct Linux Distribution"
   assert:
-    that: (ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('22.0.0', '>=')) or
-          'microsoft' in ansible_kernel | lower
-    msg:  "This Linux distribution '{{ ansible_distribution }} {{ ansible_distribution_version }}' is not supported by the role."
+    that:
+      (ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('22.0.0', '>=')) or
+      'microsoft' in ansible_kernel | lower
+    msg: "This Linux distribution '{{ ansible_distribution }} {{ ansible_distribution_version }}' is not supported by the role."
   tags: wsl-config
 
-# See https://github.com/microsoft/WSL/issues/4555#issuecomment-539674785
 - name: "Detect WSL version"
-  raw: test $(grep -oE "gcc version ([0-9]+)" /proc/version | awk '{print $3}') -gt 5 && echo "wsl2" || echo "wsl1"
-  changed_when: false
-  register: wsl_version
-  args:
-    executable: /bin/bash
-  tags: always
-
-- name: "Set WSL version fact"
   set_fact:
-    wsl_version: "{{ wsl_version.stdout_lines[0] | lower }}"
-    cacheable: false
+    wsl_version: "{{ 'wsl2' if ansible_kernel is search('WSL2') else 'wsl1' }}"
+    templates_root: "{{ 'wsl2' if ansible_kernel is search('WSL2') else 'wsl1' }}/{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}"
   tags: always
 
 - name: "Include OS/WSL Variables"
   include_vars: "{{ wsl_version }}/vars-{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}.yml"
   tags: wsl-config
 
-- name: "Run WSL-Specific Tasks"
-  include_tasks: "tasks-{{ wsl_version }}.yml"
+- name: "Run OS/WSL Tasks"
+  include_tasks: "{{ wsl_version }}/tasks-{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}.yml"
   tags: wsl-config
 
-
-- name: "OS Dependencies"
-  block:
-    - name: "Install OS Dependencies"
-      package:
-        name: "{{ item }}"
-        state: present
-      with_items: "{{ wsl_config_os_dependencies }}"
-      register: package_install_result
-      failed_when: false
-      when: wsl_config_os_dependencies is defined and wsl_config_os_dependencies | length > 0
-
-    - name: "Report package installation issues"
-      debug:
-        msg: "Some packages may not have installed properly. This is common in WSL environments."
-      when: package_install_result.results |
-            default([]) |
-            selectattr('failed', 'defined') |
-            selectattr('failed') |
-            list |
-            length > 0
+- name: "Set wsl.conf"
+  template:
+    src: "{{ templates_root }}/etc/wsl.conf.j2"
+    dest: "/etc/wsl.conf.tmp"
+    owner: root
+    group: root
+    mode: "0644"
   tags: wsl-config
 
-- name: "PIP Dependencies"
-  pip:
-    name: "{{ wsl_config_pip_dependencies }}"
-    state: present
-    executable: pip3
+- name: "Set Hostname"
+  hostname: name="{{ wsl_config_wsl_hostname }}"
+  when: wsl_config_wsl_hostname | default('') != ''
   tags: wsl-config
 
+- name: "Daily Cron Jobs"
+  copy:
+    src: "{{ templates_root }}/etc/cron.daily/{{ item }}"
+    dest: "/etc/cron.daily/{{ item }}"
+    owner: root
+    group: root
+    mode: "0755"
+  loop:
+    - cleanups
+  tags: wsl-config
 
-# - name: "Set Hostname"
-#   hostname: name="{{ wsl_config_wsl_hostname }}"
-#   when: wsl_config_wsl_hostname | default('') != ''
-#   tags: wsl-config
-
-# - name: "Daily Cron Jobs"
-#   copy:
-#     src:   "etc/cron.daily/{{ item }}"
-#     dest:  "/etc/cron.daily/{{ item }}"
-#     owner: root
-#     group: root
-#     mode:  '0755'
-#   loop:
-#    - cleanups
-#   tags: wsl-config
-
-# - name: "Update users home directory"
-#   replace:
-#     path:    /etc/passwd
-#     regexp:  "^({{ item.username }}:[^:]*:[^:]*:[^:]*:[^:]*:)([^:]*)(:[^:]*)$"
-#     replace: "\\1{{ wsl_config_win_home_root }}/{{ item.win_username }}\\3"
-#   loop: "{{ wsl_config_users }}"
-#   tags: wsl-config
-
-# # #  WSL-Windows Services Startup  # #
-
-# - name: "WSL-Windows Services"
-#   block:
-
-#    - name: "WSL-Windows : Disable Unwanted Services"
-#      shell: "update-rc.d {{ item }} remove"
-#      loop: "{{ wsl_config_nostart_services }}"
-#      changed_when: false
-
-#    - name: "WSL-Windows : Linux-side Scripts"
-#      copy:
-#        src:   etc/wsl-services-init
-#        dest:  /etc/wsl-services-init
-#        owner: root
-#        group: root
-#        mode:  '0755'
-
-#    - name: "WSL-Windows : Sudo Permissions"
-#      lineinfile:
-#        path:   /etc/sudoers
-#        regexp: '/etc/wsl-services-init$'
-#        line:   '%sudo ALL=(ALL:ALL)NOPASSWD: /etc/wsl-services-init'
-
-#    - name: "WSL-Windows : Services Startup"
-#      template:
-#        src:   "etc/{{ item }}.j2"
-#        dest:  "/etc/{{ item }}"
-#        owner: root
-#        group: root
-#        mode:  '0644'
-#      loop:
-#       - wsl.conf
-#       - hosts
-
-#   when: wsl_config_integrate_services | default(true) | bool
-#   tags: wsl-config
+- name: "Update users home directory"
+  replace:
+    path: /etc/passwd
+    regexp: "^({{ item.username }}:[^:]*:[^:]*:[^:]*:[^:]*:)([^:]*)(:[^:]*)$"
+    replace: "\\1{{ wsl_config_win_home_root }}/{{ item.win_username }}\\3"
+    backup: true
+  loop: "{{ wsl_config_users }}"
+  tags: wsl-config

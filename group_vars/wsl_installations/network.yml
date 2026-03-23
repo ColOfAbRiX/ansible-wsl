@@ -1,0 +1,4 @@
+---
+
+# Hostname under WSL that should match Windows hostname
+wsl_hostname: "{{ win_user | upper }}"

@@ -4,7 +4,7 @@
 #
 
 Param(
-    [Switch]$SkipAnsibleInstall,
+    [Switch]$SkipDependencies,
     [Switch]$SkipSecrets,
     [Switch]$SkipCoreConfig
 )
@@ -59,13 +59,13 @@ if (!$?)
 }
 
 # Installing Ansible
-if (-not $SkipAnsibleInstall)
+if (-not $SkipDependencies)
 {
-    Write-Host "`nInstalling Ansible"
-    wsl -d "$distribution" -u root ./scripts/install_ansible.sh
+    Write-Host "`nInstalling system dependencies"
+    wsl -d "$distribution" -u root ./scripts/install_dependencies.sh
     if (!$?)
     {
-        Write-Host "ERROR: Couldn't install Ansible"
+        Write-Host "ERROR: Couldn't install dependencies"
         exit 1
     }
 }

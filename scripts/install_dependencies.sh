@@ -1,7 +1,6 @@
-#!/bin/bash
+#!/bin/bash -x
 #
-# Install Ansible and its dependencies on the system
-# Following official documentation: https://docs.ansible.com/projects/ansible/latest/installation_guide/intro_installation.html
+# Install dependencies
 #
 
 is_ansible_installed() {
@@ -24,24 +23,22 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
+# Install prerequisites
+apt install -y python3 python3-pip python3-venv python3-packaging dos2unix
+
 # Removing existing previous installations of this repo
 rm -rf "${ansible_repo_path}"
 
 if ! is_ansible_installed || ! is_ansible_version "${ansible_core_version}" ; then
-    # Update the system and install prerequisites
-    apt install -y python3 python3-pip python3-venv
-
     # Remove previous Ansible installations
     apt remove ansible -y > /dev/null 2>&1
     python3 -m pip uninstall -y ansible ansible-core > /dev/null 2>&1
 
     # Install ansible-core using pip (following official documentation)
-    # Using --break-system-packages flag for Debian 12+ compatibility
-    python3 -m pip install --upgrade pip
-    python3 -m pip install "ansible-core==${ansible_core_version}" --break-system-packages
+    python3 -m pip install "ansible-core==${ansible_core_version}"
 
     # Install the full ansible package which includes ansible-core and collections
-    python3 -m pip install "ansible==${ansible_version}" --break-system-packages
+    python3 -m pip install "ansible==${ansible_version}"
 fi
 
 # Double check that Ansible works

@@ -6,9 +6,9 @@
   gather_facts: true
 
   pre_tasks:
-   - name: "Check for empty variables"
-     assert:
-       that:
+    - name: "Check for empty variables"
+      assert:
+        that:
         - first_name                | default("") | trim != ""
         - last_name                 | default("") | trim != ""
         - lnx_user                  | default("") | trim != ""
@@ -16,15 +16,16 @@
         - wsl_hostname              | default("") | trim != ""
         - ansible_sudo_pass         | default("") | trim != ""
         - ssh_key_passphrase        | default("") | trim != ""
-       msg: "All required variables must have a value"
-     tags: always
+        msg: "All required variables must have a value"
+      tags: always
 
-   - name: "Update Apt cache"
-     apt:
-       update_cache: true
-     changed_when: false
-     ignore_errors: true
-     tags: always
+    - name: "Update package cache"
+      package:
+        update_cache: yes
+      changed_when: false
+      ignore_errors: true
+      when: ansible_facts['pkg_mgr'] in ['apt', 'yum', 'dnf', 'zypper']
+      tags: always
 
   roles:
     # WSL Configuration
