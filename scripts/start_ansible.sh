@@ -8,7 +8,6 @@ scripts_dir="$(readlink -e "$(dirname ${BASH_SOURCE[0]})")"
 source "${scripts_dir}/settings.sh"
 pushd "${repository_root}" > /dev/null
 
-
 playbook="$1"; shift
 
 if [[ -z "${playbook}" || ! -f "${playbook}" ]] ; then
@@ -16,10 +15,9 @@ if [[ -z "${playbook}" || ! -f "${playbook}" ]] ; then
     exit 1
 fi
 
-cd "${ansible_repo_path}"
+cd "${ANSIBLE_REPO_PATH}"
 ansible-playbook -i inventory "${playbook}" "$@"
 result="$?"
-
 
 popd > /dev/null
 exit $result

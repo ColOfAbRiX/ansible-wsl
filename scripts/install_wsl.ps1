@@ -10,6 +10,12 @@ Param(
     [Switch]$SkipMainConfig
 )
 
+# Load settings
+$configPath = Join-Path $PSScriptRoot "settings.conf"
+$configContent = Get-Content -Path $configPath | ForEach-Object { $_ -replace '"', '' }
+$config = $configContent | ConvertFrom-StringData
+$ansibleRepoPath = $config.ANSIBLE_REPO_PATH
+
 # Setting permissions for this script
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
 
@@ -42,12 +48,7 @@ do
     }
 } until ($ok)
 
-
 # #  Prerequisites  # #
-
-# # Ensure WSL1 for performance and compatibility issues
-# Write-Host "`nEnforcing WSL v1 for performance and compatibility"
-# wsl --set-version "$distribution" 1
 
 # Fixing file permissions issue with initial FS configuration
 Write-Host "`nFixing file permissions issue with initial FS configuration"
@@ -59,7 +60,7 @@ if (!$?)
     wsl --terminate "$distribution"
 }
 
-# Installing Ansible
+# Install Dependencies
 if (-not $SkipDependencies)
 {
     Write-Host "`nInstalling system dependencies"
@@ -98,14 +99,13 @@ if (-not $SkipSecrets)
 if (-not $SkipCoreConfig)
 {
     Write-Host "`nRun core WSL configuration"
-    wsl -d "$distribution" /tmp/ansible-wsl/scripts/start_ansible.sh playbook.yml -t wsl-config
+    wsl -d "$distribution" $ansibleRepoPath/scripts/start_ansible.sh playbook.yml -t wsl-config
     if (!$?)
     {
         Write-Host "ERROR: Core configuration of WSL failed"
         exit 1
     }
 
-    # Restart WSL
     Write-Host "`nRestart WSL"
     wsl --terminate "$distribution"
     if (!$?)
@@ -114,7 +114,6 @@ if (-not $SkipCoreConfig)
         exit 1
     }
 }
-
 
 # # #  Full configuration  # #
 
@@ -138,7 +137,7 @@ if (-not $SkipCoreConfig)
 if (-not $SkipMainConfig)
 {
     Write-Host "`nRun the environment WSL configuration"
-    wsl -d "$distribution" /tmp/ansible-wsl/scripts/start_ansible.sh playbook.yml --skip-tags wsl-win-integration
+    wsl -d "$distribution" $ansibleRepoPath/scripts/start_ansible.sh playbook.yml --skip-tags wsl-win-integration
     if (!$?)
     {
         Write-Host "ERROR: Environment configuration of WSL failed"

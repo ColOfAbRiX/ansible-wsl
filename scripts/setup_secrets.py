@@ -14,7 +14,6 @@ import yaml
 import string
 import random
 
-# TODO: Use configurable secrets paths
 # TODO: Use real username for ssh-key name
 
 # Secret definitions with metadata
@@ -240,10 +239,12 @@ def main() -> int:
     original_dir = Path.cwd()
     os.chdir(repo_root)
 
+    config = load_settings(os.path.join(repo_root, "scripts", "settings.conf"))
+
     try:
-        vault_file = Path(VAULT_FILE)
-        secrets_file = Path(LNX_SECRETS_YML)
-        ssh_keys_dir = repo_root / SSH_KEY_PATH
+        vault_file = Path(config.VAULT_FILE)
+        secrets_file = Path(config.LNX_SECRETS_YML)
+        ssh_keys_dir = repo_root / config.SSH_KEY_PATH
 
         # Set environment variable for ansible-vault
         os.environ["ANSIBLE_VAULT_PASSWORD_FILE"] = str(vault_file)
@@ -285,7 +286,7 @@ def main() -> int:
                 if str(key_file).endswith(".gitkeep"):
                     continue
                 # Skip files with extensions (e.g., .pub)
-                if not key_file.suffix:
+                if not key_file.suffix and key_file.is_file():
                     encrypt_with_vault(key_file, vault_file)
 
         # Step 8: Securing permissions...

@@ -3,28 +3,28 @@
 # Initializes the ansible repository to be usable on the target
 #
 
-# Load configuration
-scripts_dir="$(readlink -e "$(dirname ${BASH_SOURCE[0]})")"
-source "${scripts_dir}/settings.sh"
-pushd "${repository_root}" > /dev/null
-
 if [[ $EUID -eq 0 ]]; then
    echo "This script must NOT run as root"
    exit 1
 fi
 
+# Load configuration
+scripts_dir="$(readlink -e "$(dirname ${BASH_SOURCE[0]})")"
+source "${scripts_dir}/settings.sh"
+pushd "${repository_root}" > /dev/null
+
 # Download Ansible roles and dependencies
-ansible-galaxy install -r requirements.yml --ignore-errors
+ansible-galaxy install -r requirements.yml --ignore-errors 2> /dev/null
 
 # Create target directory and copy this repository
 echo -e "\nCreate ansible target directory and copy this repository"
-rm -rf "${ansible_repo_path}" 2> /dev/null
-mkdir "${ansible_repo_path}"
+rm -rf "${ANSIBLE_REPO_PATH}" 2> /dev/null
+mkdir "${ANSIBLE_REPO_PATH}"
 shopt -s extglob
-cp -r !(.*) "${ansible_repo_path}"
+cp -r !(.*) "${ANSIBLE_REPO_PATH}"
 shopt -u extglob
 
-pushd "${ansible_repo_path}" > /dev/null
+pushd "${ANSIBLE_REPO_PATH}" > /dev/null
 
 # Set permissions for this repository
 echo -e "\nSet permissions for the repository"

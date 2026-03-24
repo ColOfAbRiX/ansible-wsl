@@ -6,10 +6,4 @@ if [[ $? > 0 ]] ; then
     exit 1
 fi
 
-ansible_core_version="2.17.14"
-ansible_version="10.7.0"
-
-ansible_repo_path=/tmp/ansible-wsl
-vault_file=vault.txt
-lnx_secrets_yml=host_vars/linux/secrets.yml
-win_secrets_yml=host_vars/windows/secrets.yml
+source "$repository_root/scripts/settings.conf"
