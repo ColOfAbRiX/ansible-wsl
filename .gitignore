@@ -1,15 +1,20 @@
+# General directories
 __pycache__/
 .gradle/
 .history/
 .metals/
 .vscode/
-
 *.retry
-!.gitkeep
 
+# Ansible related
 group_vars/all/user.yml
 host_vars/linux/*
 host_vars/windows/*
+roles/*/
 
+# Secrets
 secrets.*
 vault.txt
+
+# Special files
+!.gitkeep

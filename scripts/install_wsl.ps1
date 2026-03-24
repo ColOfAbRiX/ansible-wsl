@@ -6,7 +6,8 @@
 Param(
     [Switch]$SkipDependencies,
     [Switch]$SkipSecrets,
-    [Switch]$SkipCoreConfig
+    [Switch]$SkipCoreConfig,
+    [Switch]$SkipMainConfig
 )
 
 # Setting permissions for this script
@@ -103,16 +104,16 @@ if (-not $SkipCoreConfig)
         Write-Host "ERROR: Core configuration of WSL failed"
         exit 1
     }
-}
 
-# # Restart WSL
-# Write-Host "`nRestart WSL"
-# wsl --terminate "$distribution"
-# if (!$?)
-# {
-#   Write-Host "ERROR: Restart of WSL failed"
-#  exit 1
-# }
+    # Restart WSL
+    Write-Host "`nRestart WSL"
+    wsl --terminate "$distribution"
+    if (!$?)
+    {
+        Write-Host "ERROR: Restart of WSL failed"
+        exit 1
+    }
+}
 
 
 # # #  Full configuration  # #
@@ -133,20 +134,23 @@ if (-not $SkipCoreConfig)
 #     -Force `
 #     -Path "$env:APPDATA\WSLServices" | Out-Null
 
-# # Run the environment WSL configuration
-# Write-Host "`nRun the environment WSL configuration"
-# wsl -d "$distribution" /tmp/ansible-wsl/scripts/start_ansible.sh playbook.yml
-# if (!$?)
-# {
-#   Write-Host "ERROR: Environment configuration of WSL failed"
-#  exit 1
-# }
+# Run the environment WSL configuration
+if (-not $SkipMainConfig)
+{
+    Write-Host "`nRun the environment WSL configuration"
+    wsl -d "$distribution" /tmp/ansible-wsl/scripts/start_ansible.sh playbook.yml --skip-tags wsl-win-integration
+    if (!$?)
+    {
+        Write-Host "ERROR: Environment configuration of WSL failed"
+        exit 1
+    }
 
-# # Last restart of WSL
-# Write-Host "`nRestart WSL"
-# wsl --terminate "$distribution"
-# if (!$?)
-# {
-#   Write-Host "ERROR: Restart of WSL failed"
-#  exit 1
-# }
+    # Last restart of WSL
+    Write-Host "`nRestart WSL"
+    wsl --terminate "$distribution"
+    if (!$?)
+    {
+        Write-Host "ERROR: Restart of WSL failed"
+        exit 1
+    }
+}

@@ -1,8 +1,0 @@
-galaxy_info:
-  author: Fabrizio Colonna
-  description: WSL Configuration and integration with Windows
-  license: MIT
-  min_ansible_version: 2.4
-  galaxy_tags: []
-
-dependencies: []

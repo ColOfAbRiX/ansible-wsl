@@ -1,5 +1,4 @@
 ---
-
 - name: WSL Configuration Playbook
   hosts: wsl_installations
   become: true
@@ -9,19 +8,20 @@
     - name: "Check for empty variables"
       assert:
         that:
-        - first_name                | default("") | trim != ""
-        - last_name                 | default("") | trim != ""
-        - lnx_user                  | default("") | trim != ""
-        - win_user                  | default("") | trim != ""
-        - wsl_hostname              | default("") | trim != ""
-        - ansible_sudo_pass         | default("") | trim != ""
-        - ssh_key_passphrase        | default("") | trim != ""
+          - first_name                | default("") | trim != ""
+          - last_name                 | default("") | trim != ""
+          - lnx_user                  | default("") | trim != ""
+          - win_user                  | default("") | trim != ""
+          - wsl_hostname              | default("") | trim != ""
+          - ansible_sudo_pass         | default("") | trim != ""
+          - ssh_key_passphrase        | default("") | trim != ""
         msg: "All required variables must have a value"
       tags: always
 
     - name: "Update package cache"
       package:
         update_cache: yes
+        cache_valid_time: 604800 # 1 week
       changed_when: false
       ignore_errors: true
       when: ansible_facts['pkg_mgr'] in ['apt', 'yum', 'dnf', 'zypper']
@@ -29,9 +29,9 @@
 
   roles:
     # WSL Configuration
-    - role: wsl-config
+    - role: wsl-win-integration
       wsl_config_wsl_hostname: "{{ wsl_hostname }}"
-    # - role: java
+    - role: java
     # - role: ssl-certs
     # - role: bash
     #   bash_users: "{{ system_users }}"
@@ -50,10 +50,10 @@
     # - role: dev-scripts
 
   post_tasks:
-   - name: "Apt cleanups"
-     apt:
-       update_cache: false
-       autoclean: true
-       autoremove: true
-     changed_when: false
-     tags: always
+    - name: "Apt cleanups"
+      apt:
+        update_cache: false
+        autoclean: true
+        autoremove: true
+      changed_when: false
+      tags: always

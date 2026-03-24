@@ -9,4 +9,16 @@ collections:
     version: ">=1.5.0"
 
 # Ansible Galaxy Roles
-roles: []
+roles:
+  - name: wsl-win-integration
+    src: https://github.com/ColOfAbRiX/role-wsl-config.git
+    scm: git
+  - name: java
+    src: https://github.com/geerlingguy/ansible-role-java.git
+    scm: git
+  - name: scala
+    src: https://github.com/ColOfAbRiX/role-scala.git
+    scm: git
+  - name: ssl-certs
+    src: https://github.com/ColOfAbRiX/role-ssl-certs.git
+    scm: git

@@ -13,6 +13,8 @@ if [[ $EUID -eq 0 ]]; then
    exit 1
 fi
 
+# Download Ansible roles and dependencies
+ansible-galaxy install -r requirements.yml --ignore-errors
 
 # Create target directory and copy this repository
 echo -e "\nCreate ansible target directory and copy this repository"
