@@ -1,0 +1,114 @@
+---
+
+# Support for drop-in aliases plus several default ones
+bash_features_aliases:
+  name:  aliases
+  state: present
+  files:
+   - name: gradle
+     content: |
+       # Explicit Java Keystore management for Gradle
+       jks_path=$(readlink -e $(dirname $(readlink -e $(which keytool)))/../lib/security/cacerts)
+       alias gradlew="./gradlew -Djavax.net.ssl.trustStoreType=jks -Djavax.net.ssl.trustStore=$jks_path"
+       alias gradlewvpn="./gradlew -Djavax.net.ssl.trustStoreType=jks -Djavax.net.ssl.trustStore=$jks_path -Dauthentication_type=noniap"
+
+       function test-project() {
+           [[ -z "$1" ]] && echo "You must specify the name of a project" && exit 1
+           local gradlew="./gradlew -Djavax.net.ssl.trustStoreType=jks -Djavax.net.ssl.trustStore=$jks_path"
+           local cmd="$(ls -1 "$1" | while read project ; do echo "$1:$project:test " ; done | echo "gradlew $(paste -sd '')")"
+           $cmd
+       }
+
+       function build-project() {
+           [[ -z "$1" ]] && echo "You must specify the name of a project" && exit 1
+           local gradlew="./gradlew -Djavax.net.ssl.trustStoreType=jks -Djavax.net.ssl.trustStore=$jks_path"
+           local cmd="$(ls -1 "$1" | while read project ; do echo "$1:$project:build " ; done | echo "gradlew $(paste -sd '')")"
+           $cmd
+       }
+
+   - name: docker
+     content: |
+       alias docker_clean_images='docker rmi $(docker images -a --filter=dangling=true -q)'
+       alias docker_clean_ps='docker rm $(docker ps --filter=status=exited --filter=status=created -q)'
+
+   - name: wsl
+     content: |
+       # Various aliases to integrate with Windows
+       alias vscode='code'
+       alias windir="explorer.exe ${1:-.}"
+       # For wsl-keeagent
+       alias keeagent='sudo service wsl-keeagent'
+
+# Support for drop-in autocomplete plus several useful ones
+bash_features_autocomplete:
+  name:  autocomplete
+  state: present
+
+# Advanced message-of-the-day
+bash_features_motd:
+  name:  motd
+  state: present
+
+# Custom bash history settings
+bash_features_history:
+  name:  history
+  state: present
+
+# # Custom shell prompt
+# bash_features_prompt:
+#   name:  prompt
+#   state: present
+
+# User's ~/.bashrc file (additional settings)
+lnx_user_bashrc: ""
+# lnx_user_bashrc: |
+#   {% if wsl_keeagent_enabled | default(False) | bool %}
+#   # To use Keepass KeeAgent
+#   export SSH_AUTH_SOCK="{{ wsl_keeagent_ssh_agent_socket }}"
+
+#   {% endif %}
+#   # Updating PATH with custom scripts and binaries
+#   export PATH="{{ dev_scripts_path }}:$PATH"
+
+#   # To access Docker for Windows
+#   export DOCKER_HOST=tcp://localhost:2375
+
+#   # NodeJS options
+#   export NODE_OPTIONS=--max_old_space_size={{ [ansible_memtotal_mb / 4.0, 4096.0] | max | int }}
+
+#   # Proxy for Nexus
+#   export NEXUS_BASE_URL={{ gradle_nexus_url }}
+#   export NEXUS_BASE_URL_ANON={{ gradle_nexus_url_anon }}
+
+#   # Google IAP Secrets for Gradle
+#   export IAP_CLIENT_ID="{{ iap_client_id }}"
+#   export OTHER_CLIENT_ID="{{ iap_other_client_id }}"
+#   export OTHER_CLIENT_SECRET_ENC="{{ iap_other_client_secret | b64encode }}"
+#   export REFRESH_TOKEN_ENC="{{ iap_refresh_token | b64encode }}"
+
+#   # Google IAP Secrets for ElasticSearch
+#   export ENCRYPT_KEY="{{ iap_elastic_encrypt_key }}"
+#   export ENGRAM_CLIENT_SECRET="{{ iap_elastic_client_secret }}"
+#   export ENGRAM_IAP_REFRESH_TOKEN="{{ iap_elastic_refresh_token }}"
+#   export ENGRAM_ELASTIC_PASSWORD="{{ engram_elastic_password }}"
+
+#   # Graphical settings for VcXsrv Windows X Server
+#   export DISPLAY=localhost:0.0
+#   export BROWSER=wslview
+
+#   # NVM (uncommend if needed)
+#   #export NVM_DIR="$HOME/.nvm"
+#   #source "$NVM_DIR/nvm.sh"
+#   #source "$NVM_DIR/bash_completion"
+
+#   {{ custom_bashrc | default('') }}
+
+
+# Aggregating all the above features
+bash_features:
+ - "{{ bash_features_autocomplete   | default({'name': 'autocomplete'}) }}"
+ - "{{ bash_features_motd           | default({'name': 'motd'}) }}"
+ - "{{ bash_features_history        | default({'name': 'history'}) }}"
+ - "{{ bash_features_aliases        | default({'name': 'aliases'}) }}"
+ - "{{ bash_features_history2syslog | default({'name': 'history2syslog'}) }}"
+ - "{{ bash_features_prompt         | default({'name': 'prompt'}) }}"

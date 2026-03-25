@@ -22,32 +22,25 @@
       package:
         update_cache: yes
         cache_valid_time: 604800 # 1 week
-      changed_when: false
-      ignore_errors: true
-      when: ansible_facts['pkg_mgr'] in ['apt', 'yum', 'dnf', 'zypper']
       tags: always
 
   roles:
     # WSL Configuration
     - role: wsl-win-integration
       wsl_config_wsl_hostname: "{{ wsl_hostname }}"
-    - role: java
-    # - role: ssl-certs
+    - role: ssl-certs
     # - role: bash
     #   bash_users: "{{ system_users }}"
-    # - role: openssh
-    #   ssh_agent_enabled: "{{ not wsl_keeagent_enabled | default(False) | bool }}"
-    # - role: ssh-keys
-    #   ssh_user_keys: "{{ system_users }}"
-    #   when: not wsl_keeagent_enabled | default(False) | bool
+    - role: openssh
+      ssh_agent_enabled: "{{ not wsl_keeagent_enabled | default(False) | bool }}"
+    - role: ssh-keys
+      ssh_user_keys: "{{ system_users }}"
+      when: not wsl_keeagent_enabled | default(False) | bool
     # - role: wsl-keeagent
     #   when: wsl_keeagent_enabled | default(False) | bool
-    # # - role: gcloudsdk
-    # - role: scala
-    # - role: docker
-    # - role: nodejs
-    # - role: gradle
-    # - role: dev-scripts
+    - role: java
+    - role: scala
+    - role: docker
 
   post_tasks:
     - name: "Apt cleanups"

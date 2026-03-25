@@ -185,30 +185,6 @@ def generate_vault_password(vault_path: Path) -> None:
     vault_path.touch(mode=0o600)
     vault_path.write_text(password)
 
-def generate_ssh_keypair(ssh_keys_dir: Path, passphrase: str) -> None:
-    """
-    Generate SSH keypair if it doesn't exist.
-    """
-    key_path = ssh_keys_dir / "username"
-    if key_path.exists():
-        print(f"\nSSH keypair already exists: {key_path}")
-        return
-
-    print(f"\nCreating new SSH keypair")
-    key_path.parent.mkdir(parents=True, exist_ok=True)
-
-    from datetime import datetime
-    comment = f"SSH key for {os.environ.get('USER')} created on {datetime.now().strftime('%Y/%m/%d')}"
-
-    subprocess.run([
-        "ssh-keygen",
-        "-t", "ed25519",
-        "-a", "100",
-        "-N", passphrase,
-        "-f", str(key_path),
-        "-C", comment
-    ], check=True)
-
 def encrypt_with_vault(file_path: Path, vault_password_file: Path) -> None:
     """
     Encrypt a file with ansible-vault if not already encrypted.
@@ -263,11 +239,6 @@ def main() -> int:
         if has_changes:
             # Step 4: Write secrets file (only if there are changes)
             write_secrets_yaml(all_secrets, secrets_file)
-
-            # Step 5: Generate SSH keypair if needed
-            ssh_passphrase = all_secrets.get("ssh_key_passphrase", "")
-            if ssh_passphrase:
-                generate_ssh_keypair(ssh_keys_dir, ssh_passphrase)
 
             # Step 6: Encrypt secrets (only if there are changes or file is not)
             if has_changes or not is_vault_encrypted(secrets_file):

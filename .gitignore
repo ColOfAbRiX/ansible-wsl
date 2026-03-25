@@ -13,6 +13,9 @@ host_vars/windows/*
 roles/*/
 
 # Secrets
+data/gpg_keys/*
+data/ssh_keys/*
+data/ssl_certs/*
 secrets.*
 vault.txt
 
