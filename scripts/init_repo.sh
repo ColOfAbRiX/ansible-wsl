@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 #
 # Initializes the ansible repository to be usable on the target
 #

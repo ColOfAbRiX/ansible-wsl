@@ -8,13 +8,13 @@
     - name: "Check for empty variables"
       assert:
         that:
-          - first_name                | default("") | trim != ""
-          - last_name                 | default("") | trim != ""
-          - lnx_user                  | default("") | trim != ""
-          - win_user                  | default("") | trim != ""
-          - wsl_hostname              | default("") | trim != ""
-          - ansible_sudo_pass         | default("") | trim != ""
-          - ssh_key_passphrase        | default("") | trim != ""
+          - first_name         | default("") | trim != ""
+          - last_name          | default("") | trim != ""
+          - lnx_user           | default("") | trim != ""
+          - win_user           | default("") | trim != ""
+          - wsl_hostname       | default("") | trim != ""
+          - ansible_sudo_pass  | default("") | trim != ""
+          - ssh_key_passphrase | default("") | trim != ""
         msg: "All required variables must have a value"
       tags: always
 
@@ -29,18 +29,24 @@
     - role: wsl-win-integration
       wsl_config_wsl_hostname: "{{ wsl_hostname }}"
     - role: ssl-certs
-    # - role: bash
-    #   bash_users: "{{ system_users }}"
     - role: openssh
       ssh_agent_enabled: "{{ not wsl_keeagent_enabled | default(False) | bool }}"
     - role: ssh-keys
       ssh_user_keys: "{{ system_users }}"
       when: not wsl_keeagent_enabled | default(False) | bool
+    - role: bash
+      bash_users: "{{ system_users }}"
+    - role: starship
+    # TODO:
     # - role: wsl-keeagent
     #   when: wsl_keeagent_enabled | default(False) | bool
+    - role: git
     - role: java
     - role: scala
     - role: docker
+      tags: docker
+    - role: vim
+      tags: vim
 
   post_tasks:
     - name: "Apt cleanups"

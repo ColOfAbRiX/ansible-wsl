@@ -1,0 +1,100 @@
+---
+git_users:
+  - username: " {{ lnx_user }}"
+    gitconfig:
+      user:
+        name: "{{ git_username }}"
+        email: "{{ git_email | omit }}"
+      core:
+        bare: false
+        filemode: true
+        logallrefupdates: true
+      init:
+        defaultBranch: main
+
+git_system_config:
+  core:
+    editor: "vim"
+    # Always use LF as line terminator
+    autocrlf: "input"
+    safecrlf: "true"
+    eol: "lf"
+    ignorecase: "true"
+    # Performance, https://stackoverflow.com/a/49826884/1215156
+    preloadIndex: "true"
+    # Performance https://www.git-tower.com/blog/git-performance/
+    commitgraph: "true"
+    # Performance, but see https://stackoverflow.com/a/44206539
+    untrackedcache: "true"
+  user:
+    name: "{{ git_username }}"
+    email: "{{ git_email }}"
+  push:
+    # See https://stackoverflow.com/a/948397
+    default: "current"
+    autoSetupRemote: "true"
+  pull:
+    rebase: "true"
+  rebase:
+    autoStash: "true"
+  branch:
+    # See https://stackoverflow.com/a/41327622
+    autoSetupMerge: "always"
+  remote "origin":
+    prune: "true"
+  feature:
+    # Performance https://www.git-tower.com/blog/git-performance/
+    manyFiles: "true"
+  fetch:
+    # Performance https://www.git-tower.com/blog/git-performance/
+    writeCommitGraph: "true"
+  gc:
+    # Performance, https://stackoverflow.com/a/49826884/1215156
+    writeCommitGraph: "true"
+    reflogExpire: "1.months.ago"
+    reflogExpireUnreachable: "1.months.ago"
+    pruneExpire: "1.weeks.ago"
+    worktreePruneExpire: "1.months.ago"
+    autodetach: "false"
+  color:
+    ui: "auto"
+  rerere:
+    enabled: "true"
+  # Diff tool
+  difftool "vimdiff":
+    path: "vimdiff"
+  difftool:
+    prompt: "false"
+  diff:
+    tool: "vimdiff"
+  # Merge tool
+  mergetool "vimdiff":
+    path: "vimdiff"
+  mergetool:
+    keepBackup: "false"
+  merge:
+    tool: "vimdiff"
+  pack:
+    threads: "1"
+  alias:
+    # Checkout
+    cb: "checkout -b"
+    # Miscellaneous
+    st: "status"
+    aa: "add -A :/"
+    br: "branch -a"
+    sync: "fetch --all --prune"
+    # Diff
+    dd: "diff"
+    dc: "diff --cached"
+    # Logging
+    ll: "log -20 --pretty=format:'%C(red)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr) %C(bold blue)%an <%ae>%C(reset)' --abbrev-commit"
+    lg: "log -20 --graph --pretty=format:'%C(red)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr) %C(bold blue)%an <%ae>%C(reset)' --abbrev-commit"
+    gr: "log --oneline --decorate --graph --all"
+    rl: "reflog --pretty=format:'%C(red)%h%C(reset) -%C(yellow)%d%C(reset) %gs %C(green)(%cr)' --abbrev-commit"
+    # Shows the local branches sorted by last commit
+    tasks: "for-each-ref --sort=-committerdate refs/heads/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) %(contents:subject) %(color:green)(%(committerdate:relative))%(color:reset) %(color:blue)%(authorname) %(authoremail)%(color:reset)'"
+    # Shows conflicted files
+    conflicts: "diff --name-only --diff-filter=U"
+    # Shows the contributors of the last 500 commits
+    contrib: "shortlog -sn --no-merges HEAD~500..HEAD"

@@ -13,24 +13,43 @@ roles:
   - name: wsl-win-integration
     src: https://github.com/ColOfAbRiX/role-wsl-config.git
     scm: git
+
   - name: ssl-certs
     src: https://github.com/ColOfAbRiX/role-ssl-certs.git
     scm: git
-  # - name: openssh
-  #   src: https://github.com/ColOfAbRiX/role-openssh.git
-  #   scm: git
+
+  - name: openssh
+    src: https://github.com/ColOfAbRiX/role-openssh.git
+    scm: git
+
   - name: ssh-keys
     src: https://github.com/ColOfAbRiX/role-ssh-keys.git
     scm: git
+
   - name: bash
     src: https://github.com/ColOfAbRiX/role-bash.git
     scm: git
+
+  - name: starship
+    src: https://github.com/rolehippie/starship.git
+    scm: git
+
+  - name: git
+    src: https://github.com/ColOfAbRiX/role-git.git
+    scm: git
+
   - name: java
     src: https://github.com/geerlingguy/ansible-role-java.git
     scm: git
+
   - name: scala
     src: https://github.com/ColOfAbRiX/role-scala.git
     scm: git
+
   - name: docker
     src: https://github.com/geerlingguy/ansible-role-docker.git
+    scm: git
+
+  - name: vim
+    src: https://github.com/tonipamies/ansible-role-vim.git
     scm: git

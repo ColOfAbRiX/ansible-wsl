@@ -1,0 +1,6 @@
+---
+scala_sbt_global_opts: |
+  -Dsbt.global.base=/var/cache/{{ lnx_user }}/.sbt
+  -Dsbt.ivy.home=/var/cache/{{ lnx_user }}/.ivy2
+  -Dsbt.boot.directory=/var/cache/{{ lnx_user }}/.sbt/boot
+  -Dsbt.coursier.home=/var/cache/{{ lnx_user }}/.cache/coursier
