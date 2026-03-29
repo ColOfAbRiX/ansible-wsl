@@ -9,16 +9,17 @@ win_user: "{{ ((first_name | title) + (last_name | title))[:20] }}"
 git_username: "{{ first_name | title }} {{ last_name | title }}"
 
 # Main user definition
-main_user_def:
+main_user_system:
   username: "{{ lnx_user }}"
-  bashrc: "{{ lnx_user_bashrc }}"
+  bashrc: "{{ lnx_user_bashrc | default('') }}"
   shell: /bin/bash
+
+main_user_wsl_config:
+  username: "{{ lnx_user }}"
+  win_username: "{{ win_user }}"
+
+main_user_starship: {}
 
 # User configuration
 system_users:
-  - "{{ main_user_def | combine(main_user_ssh) }}"
-
-# Same as above but the subset used by wsl-config only
-wsl_config_users:
-  - username: "{{ lnx_user }}"
-    win_username: "{{ win_user }}"
+  - "{{ main_user_system | combine(main_user_ssh) | combine(main_user_git) | combine(main_user_wsl_config) | combine(main_user_starship) }}"

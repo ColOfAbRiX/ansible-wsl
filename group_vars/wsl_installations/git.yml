@@ -1,16 +1,16 @@
 ---
-git_users:
-  - username: " {{ lnx_user }}"
-    gitconfig:
-      user:
-        name: "{{ git_username }}"
-        email: "{{ git_email | omit }}"
-      core:
-        bare: false
-        filemode: true
-        logallrefupdates: true
-      init:
-        defaultBranch: main
+main_user_git:
+  username: " {{ lnx_user }}"
+  gitconfig:
+    user:
+      name: "{{ git_username }}"
+      email: "{{ git_email | omit }}"
+    core:
+      bare: false
+      filemode: true
+      logallrefupdates: true
+    init:
+      defaultBranch: main
 
 git_system_config:
   core:
