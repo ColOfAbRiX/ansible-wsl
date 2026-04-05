@@ -26,6 +26,8 @@ git_system_config:
     commitgraph: "true"
     # Performance, but see https://stackoverflow.com/a/44206539
     untrackedcache: "true"
+    # Performance, see https://linuxvox.com/blog/why-is-git-on-wsl2-with-soucetree-so-slow-for-me/
+    fscache: "true"
   user:
     name: "{{ git_username }}"
     email: "{{ git_email }}"
@@ -40,42 +42,6 @@ git_system_config:
   branch:
     # See https://stackoverflow.com/a/41327622
     autoSetupMerge: "always"
-  remote "origin":
-    prune: "true"
-  feature:
-    # Performance https://www.git-tower.com/blog/git-performance/
-    manyFiles: "true"
-  fetch:
-    # Performance https://www.git-tower.com/blog/git-performance/
-    writeCommitGraph: "true"
-  gc:
-    # Performance, https://stackoverflow.com/a/49826884/1215156
-    writeCommitGraph: "true"
-    reflogExpire: "1.months.ago"
-    reflogExpireUnreachable: "1.months.ago"
-    pruneExpire: "1.weeks.ago"
-    worktreePruneExpire: "1.months.ago"
-    autodetach: "false"
-  color:
-    ui: "auto"
-  rerere:
-    enabled: "true"
-  # Diff tool
-  difftool "vimdiff":
-    path: "vimdiff"
-  difftool:
-    prompt: "false"
-  diff:
-    tool: "vimdiff"
-  # Merge tool
-  mergetool "vimdiff":
-    path: "vimdiff"
-  mergetool:
-    keepBackup: "false"
-  merge:
-    tool: "vimdiff"
-  pack:
-    threads: "1"
   alias:
     # Checkout
     cb: "checkout -b"
@@ -84,6 +50,7 @@ git_system_config:
     aa: "add -A :/"
     br: "branch -a"
     sync: "fetch --all --prune"
+    amend: "commit --amend --no-edit"
     # Diff
     dd: "diff"
     dc: "diff --cached"
@@ -98,3 +65,42 @@ git_system_config:
     conflicts: "diff --name-only --diff-filter=U"
     # Shows the contributors of the last 500 commits
     contrib: "shortlog -sn --no-merges HEAD~500..HEAD"
+  color:
+    ui: "auto"
+  rerere:
+    enabled: "true"
+  remote "origin":
+    prune: "true"
+  feature:
+    # Performance https://www.git-tower.com/blog/git-performance/
+    manyFiles: "true"
+  fetch:
+    # Performance https://www.git-tower.com/blog/git-performance/
+    writeCommitGraph: "true"
+  bash:
+    # Stop checking for unstaged and staged changes
+    showdirtystate: "false"
+    # Stop checking for untracked files
+    showuntrackedfiles: "false"
+  gc:
+    # Performance, https://stackoverflow.com/a/49826884/1215156
+    writeCommitGraph: "true"
+    reflogExpire: "1.months.ago"
+    reflogExpireUnreachable: "1.months.ago"
+    pruneExpire: "1.weeks.ago"
+    worktreePruneExpire: "1.months.ago"
+    autodetach: "false"
+  # Diff tool
+  difftool "vimdiff":
+    path: "vimdiff"
+  difftool:
+    prompt: "false"
+  diff:
+    tool: "vimdiff"
+  # Merge tool
+  mergetool "vimdiff":
+    path: "vimdiff"
+  mergetool:
+    keepBackup: "false"
+  merge:
+    tool: "vimdiff"

@@ -1,13 +1,5 @@
 ---
 
-# Hostname under WSL that should match Windows hostname
-wsl_hostname: "{{ win_user | upper }}"
-
-# Do not autogenerate resolve.conf from WSL
-wsl_config_wsl_conf:
-  network:
-    generateResolvConf: "false"
-
 # Hardcode best DNS servers
 wsl_config_wsl_resolveConf:
   - { "nameserver": "8.8.8.8" }

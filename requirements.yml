@@ -26,6 +26,10 @@ roles:
     src: https://github.com/ColOfAbRiX/role-ssh-keys.git
     scm: git
 
+  - name: wsl-keeagent
+    src: https://github.com/ColOfAbRiX/role-wsl-keeagent.git
+    scm: git
+
   - name: bash
     src: https://github.com/ColOfAbRiX/role-bash.git
     scm: git
