@@ -8,18 +8,17 @@ win_user: "{{ ((first_name | title) + (last_name | title))[:20] }}"
 # Configuration of GIT user and email
 git_username: "{{ first_name | title }} {{ last_name | title }}"
 
-# Main user definition
+# Main user system definition
 main_user_system:
   username: "{{ lnx_user }}"
   bashrc: "{{ lnx_user_bashrc | default('') }}"
   shell: /bin/bash
 
+# Main user WSL definition
 main_user_wsl_config:
   username: "{{ lnx_user }}"
   win_username: "{{ win_user }}"
 
-main_user_starship: {}
-
 # User configuration
 system_users:
-  - "{{ main_user_system | combine(main_user_ssh) | combine(main_user_git) | combine(main_user_wsl_config) | combine(main_user_starship) }}"
+  - "{{ main_user_system | combine(main_user_ssh) | combine(main_user_gpg) | combine(main_user_git) | combine(main_user_wsl_config) | combine(main_user_starship) }}"

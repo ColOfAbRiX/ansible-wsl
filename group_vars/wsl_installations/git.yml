@@ -1,4 +1,5 @@
 ---
+# Main user GIT config definition
 main_user_git:
   username: " {{ lnx_user }}"
   gitconfig:

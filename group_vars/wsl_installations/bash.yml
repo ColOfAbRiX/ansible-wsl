@@ -1,4 +1,6 @@
 ---
+# Main user starship config definition
+main_user_starship: {}
 
 # Support for drop-in aliases plus several default ones
 bash_features_aliases:

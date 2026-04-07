@@ -47,6 +47,7 @@
     - role: wsl-keeagent
       when: wsl_keeagent_enabled | default(False) | bool
     - role: gpg-keys
+      gpg_user_keys: "{{ system_users }}"
 
     # Tooling
     - role: git

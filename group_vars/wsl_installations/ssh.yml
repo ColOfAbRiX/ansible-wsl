@@ -1,35 +1,41 @@
 ---
+# Where to place SSH keys in this repository
+ssh_keys_base: data/ssh_keys
+
+# For stronger SSH key format
+ssh_identity_files:
+ - ~/.ssh/id_ed25519
 
 # SSH
 ssh_server_enabled: no
 
 # SSH Client
-ssh_AddKeysToAgent: 'yes'
-ssh_GSSAPIAuthentication: 'yes'
-ssh_HashKnownHosts: 'yes'
-ssh_SendEnv: ['LANG', 'LC_*']
+ssh_AddKeysToAgent: "yes"
+ssh_GSSAPIAuthentication: "yes"
+ssh_HashKnownHosts: "yes"
+ssh_SendEnv: ["LANG", "LC_*"]
 
 # SSH Server
-sshd_AcceptEnv: ['LANG', 'LC_*']
-sshd_PrintMotd: 'no'
-sshd_UsePAM: 'yes'
-sshd_X11Forwarding: 'yes'
+sshd_AcceptEnv: ["LANG", "LC_*"]
+sshd_PrintMotd: "no"
+sshd_UsePAM: "yes"
+sshd_X11Forwarding: "yes"
 
 # Unset unwanted default config
-ssh_ControlMaster: ''
-ssh_GlobalKnownHostsFile: ''
-ssh_IdentityFile: ''
-ssh_UserKnownHostsFile: ''
-sshd_AuthorizedKeysFile: ''
-sshd_PermitRootLogin: ''
+ssh_ControlMaster: ""
+ssh_GlobalKnownHostsFile: ""
+ssh_IdentityFile: ""
+ssh_UserKnownHostsFile: ""
+sshd_AuthorizedKeysFile: ""
+sshd_PermitRootLogin: ""
 
-# SSH user key definition and configuration
+# Main user SSH config and keys definition
 main_user_ssh:
- - username:    "{{ lnx_user }}"
-   key_file:    "{{ ssh_user_keys_base }}/{{ lnx_user }}"
-   target_file: "~/.ssh/id_ed25519"
-   comment:     "SSH Key for {{ first_name | title }} {{ last_name | title }} created on {{ ansible_date_time.date }}"
-   passphrase:  "{{ ssh_key_passphrase }}"
-   type:        ed25519
-   new_format:  true
-   rounds:      100
+  - username: "{{ lnx_user }}"
+    key_file: "{{ ssh_user_keys_base }}/{{ lnx_user }}"
+    target_file: "~/.ssh/id_ed25519"
+    comment: "SSH Key for {{ first_name | title }} {{ last_name | title }} created on {{ ansible_date_time.date }}"
+    passphrase: "{{ ssh_key_passphrase }}"
+    type: ed25519
+    new_format: true
+    rounds: 100

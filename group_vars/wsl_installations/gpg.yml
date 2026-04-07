@@ -1,0 +1,5 @@
+---
+gpg_keys_base: data/gpg_keys
+
+# Main user GPG config and keys definition
+main_user_gpg: {}

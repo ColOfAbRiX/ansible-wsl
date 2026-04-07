@@ -1,0 +1,6 @@
+---
+
+# Some Windows path shortcuts
+windows_root: "/mnt/c/Users"
+windows_user_root: "{{ windows_root }}/{{ win_user }}"
+windows_user_appdata: "{{ windows_user_root }}/AppData"
