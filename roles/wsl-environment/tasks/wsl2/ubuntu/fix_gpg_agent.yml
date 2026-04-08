@@ -23,7 +23,6 @@
   loop: "{{ system_users | default([]) }}"
   loop_control:
     loop_var: gpg_user
-  when: system_users | default([]) | length > 0
   tags: wsl-environment
 
 - name: "Reload GPG agent"

@@ -1,41 +1,49 @@
 ---
 # configure_user_gpg.yml - Configure GPG for a single user
 
+- debug: var=gpg_user.username
+  tags: always
+
 - name: "Get user home directory"
   become: true
   ansible.builtin.getent:
     database: passwd
-    key: "{{ gpg_user }}"
+    key: "{{ gpg_user.username }}"
+  tags: wsl-environment
 
 - name: "Set user GPG home path"
   ansible.builtin.set_fact:
-    user_gpg_home: "{{ getent_passwd[gpg_user][4] }}/.gnupg"
+    user_gpg_home: "{{ getent_passwd[gpg_user.username][4] }}/.gnupg"
+  tags: wsl-environment
 
 - name: "Ensure GPG home directory exists"
   ansible.builtin.file:
     path: "{{ user_gpg_home }}"
     state: directory
-    owner: "{{ gpg_user }}"
-    group: "{{ gpg_user }}"
+    owner: "{{ gpg_user.username }}"
+    group: "{{ gpg_user.username }}"
     mode: "0700"
+  tags: wsl-environment
 
 - name: "Configure gpg-agent.conf"
   ansible.builtin.lineinfile:
     path: "{{ user_gpg_home }}/gpg-agent.conf"
     line: "{{ item }}"
     create: true
-    owner: "{{ gpg_user }}"
-    group: "{{ gpg_user }}"
+    owner: "{{ gpg_user.username }}"
+    group: "{{ gpg_user.username }}"
     mode: "0600"
   loop:
     - "pinentry-program {{ wsl_gpg_pinentry_program }}"
     - "allow-loopback-pinentry"
+  tags: wsl-environment
 
 - name: "Configure gpg.conf"
   ansible.builtin.lineinfile:
     path: "{{ user_gpg_home }}/gpg.conf"
     line: "pinentry-mode loopback"
     create: true
-    owner: "{{ gpg_user }}"
-    group: "{{ gpg_user }}"
+    owner: "{{ gpg_user.username }}"
+    group: "{{ gpg_user.username }}"
     mode: "0600"
+  tags: wsl-environment

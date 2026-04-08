@@ -1,0 +1,4 @@
+---
+- name: "Fix GPG Agent"
+  ansible.builtin.include_tasks: fix_gpg_agent.yml
+  tags: wsl-environment
