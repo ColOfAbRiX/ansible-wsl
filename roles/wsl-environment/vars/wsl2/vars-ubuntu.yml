@@ -1,0 +1,6 @@
+---
+# WSL2 Environment Variables
+
+# GPG Agent Configuration
+wsl_gpg_pinentry_program: /usr/bin/pinentry-tty
+wsl_gpg_agent_package: pinentry-tty

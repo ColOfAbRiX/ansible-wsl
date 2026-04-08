@@ -49,6 +49,9 @@
     - role: gpg-keys
       gpg_user_keys: "{{ system_users }}"
 
+    # WSL-specific fixes and customizations
+    - role: wsl-environment
+
     # Tooling
     - role: git
       git_users: "{{ system_users }}"

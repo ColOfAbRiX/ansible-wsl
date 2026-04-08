@@ -11,6 +11,7 @@ group_vars/all/user.yml
 host_vars/linux/*
 host_vars/windows/*
 roles/*/
+!roles/wsl-environment
 
 # Secrets
 data/gpg_keys/*

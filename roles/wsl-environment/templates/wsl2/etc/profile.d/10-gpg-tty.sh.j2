@@ -1,0 +1,4 @@
+#!/bin/sh
+# Configure GPG_TTY for terminal-based GPG operations
+# Required for GPG signing to work correctly in WSL2 environments
+export GPG_TTY=$(tty)

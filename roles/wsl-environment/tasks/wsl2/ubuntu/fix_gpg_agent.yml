@@ -1,0 +1,34 @@
+---
+# fix_gpg_agent.yml - Configure GPG for WSL2 environments
+# GPG signing fails with "Timeout" or "Inappropriate ioctl for device" errors in WSL2
+# because WSL2 runs a real Linux kernel in a VM, so GUI-based pinentry programs can't display.
+
+- name: "Install GPG agent package"
+  ansible.builtin.package:
+    name: "{{ wsl_gpg_agent_package }}"
+    state: present
+  tags: wsl-environment
+
+- name: "Deploy GPG_TTY environment script"
+  ansible.builtin.template:
+    src: "wsl2/etc/profile.d/10-gpg-tty.sh.j2"
+    dest: "/etc/profile.d/10-gpg-tty.sh"
+    owner: root
+    group: root
+    mode: "0644"
+  tags: wsl-environment
+
+- name: "Configure GPG for users"
+  ansible.builtin.include_tasks: configure_user_gpg.yml
+  loop: "{{ system_users | default([]) }}"
+  loop_control:
+    loop_var: gpg_user
+  when: system_users | default([]) | length > 0
+  tags: wsl-environment
+
+- name: "Reload GPG agent"
+  ansible.builtin.shell: |
+    gpgconf --kill gpg-agent 2>/dev/null || true
+  changed_when: false
+  failed_when: false
+  tags: wsl-environment

@@ -1,0 +1,26 @@
+---
+# Main tasks for WSL Environment role
+
+- name: "Detect WSL version"
+  ansible.builtin.set_fact:
+    wsl_env_version: "{{ 'wsl2' if ansible_kernel is search('WSL2') else 'wsl1' }}"
+  tags: wsl-environment
+
+- name: "Load WSL version-specific variables"
+  ansible.builtin.include_vars: "{{ lookup('first_found', files) }}"
+  vars:
+    files:
+      - "vars/{{ wsl_env_version }}/vars-{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}.yml"
+      - "vars/{{ wsl_env_version }}/vars-{{ ansible_distribution | lower }}.yml"
+      - "vars/{{ wsl_env_version }}/vars-{{ ansible_os_family | lower }}.yml"
+  tags: wsl-environment
+
+- name: "Run WSL version-specific tasks"
+  ansible.builtin.include_tasks: "{{ lookup('first_found', files) }}"
+  vars:
+    files:
+      - "tasks/{{ wsl_env_version }}/{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}/main.yml"
+      - "tasks/{{ wsl_env_version }}/{{ ansible_distribution | lower }}/main.yml"
+      - "tasks/{{ wsl_env_version }}/{{ ansible_os_family | lower }}/main.yml"
+  loop: "{{ wsl_environment_tasks | default([]) }}"
+  tags: wsl-environment
