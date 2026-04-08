@@ -1,4 +1,7 @@
 ---
+# Sonatpye configuratiob
+main_user_sonatype: {}
+
 scala_sbt_global_opts: |
   -Dsbt.global.base=/var/cache/{{ lnx_user }}/.sbt
   -Dsbt.ivy.home=/var/cache/{{ lnx_user }}/.ivy2

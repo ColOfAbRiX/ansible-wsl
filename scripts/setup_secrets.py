@@ -20,6 +20,9 @@ import random
 SECRETS_SCHEMA = {
     "ansible_sudo_pass": ("SUDO (Linux root) password", True),
     "ssh_key_passphrase": ("SSH private key passphrase", True),
+    "gpg_key_passphrase": ("Passpharse for the main GPG key", True),
+    "sonatype_user": ("Sonatype user", False),
+    "sonatype_password": ("Sonatype password", True),
 }
 
 def ask_user_password(secret_name: str, is_password: bool = True) -> str:
@@ -121,6 +124,9 @@ def write_secrets_yaml(secrets_dict: dict, output_path: Path) -> None:
     groups = {
         "System SUDO and SSH": [
             "ansible_sudo_pass", "ssh_key_passphrase"
+        ],
+        "SBT Publishing": [
+            "gpg_key_passphrase", "sonatype_user", "sonatype_password"
         ]
     }
 

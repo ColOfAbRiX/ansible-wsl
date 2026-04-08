@@ -21,4 +21,4 @@ main_user_wsl_config:
 
 # User configuration
 system_users:
-  - "{{ main_user_system | combine(main_user_ssh) | combine(main_user_gpg) | combine(main_user_git) | combine(main_user_wsl_config) | combine(main_user_starship) }}"
+  - "{{ main_user_system | combine(main_user_ssh) | combine(main_user_gpg) | combine(main_user_git) | combine(main_user_wsl_config) | combine(main_user_starship) | combine(main_user_sonatype) }}"
