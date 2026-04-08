@@ -28,18 +28,6 @@ bash_features_history:
 #   name:  prompt
 #   state: present
 
-# User's ~/.bashrc file (additional settings)
-# lnx_user_bashrc: |
-#   {% if wsl_keeagent_enabled | default(False) | bool %}
-#   # To use Keepass KeeAgent
-#   export SSH_AUTH_SOCK="{{ wsl_keeagent_ssh_agent_socket }}"
-
-#   {% endif %}
-#   # To access Docker for Windows
-#   export DOCKER_HOST=tcp://localhost:2375
-
-#   {{ custom_bashrc | default('') }}
-
 
 # Aggregating all the above features
 bash_features:
