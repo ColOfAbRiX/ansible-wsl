@@ -1,0 +1,11 @@
+---
+# Sonatpye configuratiob
+main_user_sonatype: {}
+
+sbt_global_opts:
+  global.base: "/var/cache/{{ lnx_user }}/.sbt"
+  boot.directory: "/var/cache/{{ lnx_user }}/.sbt/boot"
+  coursier.home: "/var/cache/{{ lnx_user }}/.cache/coursier"
+  ivy.home: "/var/cache/{{ lnx_user }}/.ivy2"
+
+scala_ammonite_install: true

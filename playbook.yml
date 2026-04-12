@@ -56,8 +56,9 @@
     - role: git
       git_users: "{{ system_users }}"
     - role: java
+    - role: sbt
+      sbt_users: "{{ system_users }}"
     - role: scala
-      scala_sbt_users: "{{ system_users }}"
     - role: docker
       tags: docker
 

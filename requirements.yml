@@ -46,6 +46,10 @@ roles:
     src: https://github.com/geerlingguy/ansible-role-java.git
     scm: git
 
+  - name: sbt
+    src: https://github.com/ColOfAbRiX/role-sbt.git
+    scm: git
+
   - name: scala
     src: https://github.com/ColOfAbRiX/role-scala.git
     scm: git
