@@ -52,19 +52,24 @@
     # WSL-specific fixes and customizations
     - role: wsl-environment
 
-    # Tooling
+    # Dev and Tooling
     - role: git
       git_users: "{{ system_users }}"
     - role: java
     - role: sbt
       sbt_users: "{{ system_users }}"
     - role: scala
+    - role: nvm
+      become: false
+      tags: nvm
     - role: docker
       tags: docker
 
     # Customizations
     - role: starship
       starship_users: "{{ system_users }}"
+    - role: better-shell-tools
+      better_shell_tools_users: "{{ system_users }}"
 
   post_tasks:
     - name: "Apt cleanups"

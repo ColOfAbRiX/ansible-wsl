@@ -1,4 +1,6 @@
 ---
 - name: "Fix GPG Agent"
-  ansible.builtin.include_tasks: fix_gpg_agent.yml
+  ansible.builtin.include_tasks: fix-gpg-agent.yml
   tags: wsl-environment
+
+# TODO: Add symlink to .ivy and other directories under /var/cache/<user>

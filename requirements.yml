@@ -10,54 +10,93 @@ collections:
 
 # Ansible Galaxy Roles
 roles:
+
+  # Windows integration
+
   - name: wsl-win-integration
     src: https://github.com/ColOfAbRiX/role-wsl-config.git
+    version: "2.0.0"
     scm: git
 
-  - name: ssl-certs
-    src: https://github.com/ColOfAbRiX/role-ssl-certs.git
-    scm: git
+  # System tools
 
   - name: openssh
     src: https://github.com/ColOfAbRiX/role-openssh.git
-    scm: git
-
-  - name: ssh-keys
-    src: https://github.com/ColOfAbRiX/role-ssh-keys.git
-    scm: git
-
-  - name: wsl-keeagent
-    src: https://github.com/ColOfAbRiX/role-wsl-keeagent.git
+    version: "1.0.0"
     scm: git
 
   - name: bash
     src: https://github.com/ColOfAbRiX/role-bash.git
-    scm: git
-
-  - name: starship
-    src: https://github.com/rolehippie/starship.git
-    scm: git
-
-  - name: git
-    src: https://github.com/ColOfAbRiX/role-git.git
-    scm: git
-
-  - name: java
-    src: https://github.com/geerlingguy/ansible-role-java.git
-    scm: git
-
-  - name: sbt
-    src: https://github.com/ColOfAbRiX/role-sbt.git
-    scm: git
-
-  - name: scala
-    src: https://github.com/ColOfAbRiX/role-scala.git
-    scm: git
-
-  - name: docker
-    src: https://github.com/geerlingguy/ansible-role-docker.git
+    version: "1.2.1"
     scm: git
 
   - name: vim
     src: https://github.com/tonipamies/ansible-role-vim.git
+    version: "1.0.7"
+    scm: git
+
+  # Keys and certificates
+
+  - name: ssl-certs
+    src: https://github.com/ColOfAbRiX/role-ssl-certs.git
+    version: "1.8.6"
+    scm: git
+
+  - name: ssh-keys
+    src: https://github.com/ColOfAbRiX/role-ssh-keys.git
+    version: "1.1.0"
+    scm: git
+
+  - name: wsl-keeagent
+    src: https://github.com/ColOfAbRiX/role-wsl-keeagent.git
+    version: "2.0.0"
+    scm: git
+
+  - name: gpg-keys
+    src: https://github.com/ColOfAbRiX/role-gpg-keys.git
+    version: "1.0.0"
+    scm: git
+
+  # Tooling
+
+  - name: git
+    src: https://github.com/ColOfAbRiX/role-git.git
+    version: "1.0.0"
+    scm: git
+
+  - name: java
+    src: https://github.com/geerlingguy/ansible-role-java.git
+    version: "2.6.1"
+    scm: git
+
+  - name: sbt
+    src: https://github.com/ColOfAbRiX/role-sbt.git
+    version: "1.0.0"
+    scm: git
+
+  - name: scala
+    src: https://github.com/ColOfAbRiX/role-scala.git
+    version: "3.0.0"
+    scm: git
+
+  - name: nvm
+    src: https://github.com/morgangraphics/ansible-role-nvm.git
+    version: "v2.0.0"
+    scm: git
+
+  - name: docker
+    src: https://github.com/geerlingguy/ansible-role-docker.git
+    version: "8.0.0"
+    scm: git
+
+  # Customizations
+
+  - name: starship
+    src: https://github.com/ColOfAbRiX/role-starship.git
+    version: "1.0.0"
+    scm: git
+
+  - name: better-shell-tools
+    src: https://github.com/ColOfAbRiX/role-better-shell-tools.git
+    version: "1.0.0"
     scm: git

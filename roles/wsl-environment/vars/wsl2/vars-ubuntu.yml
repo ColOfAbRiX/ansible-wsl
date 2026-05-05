@@ -1,6 +1,32 @@
 ---
 # WSL2 Environment Variables
 
+wsl_env_system_packages:
+ - autoconf
+ - automake
+ - bind9utils
+ - build-essential
+ - colordiff
+ - git
+ - manpages
+ - net-tools
+ - python3-colored
+ - python3-dev
+ - python3-git
+ - python3-pycryptodome # Tentative replecement for pip pycrypto
+ - python3-requests-kerberos
+ - python3-unittest2
+ - tmux
+ - tree
+ - unzip
+ - wget
+ - zip
+
+wsl_env_extra_tools:
+ - bat
+ - btop
+ - duf
+
 # GPG Agent Configuration
 wsl_gpg_pinentry_program: /usr/bin/pinentry-tty
 wsl_gpg_agent_package: pinentry-tty

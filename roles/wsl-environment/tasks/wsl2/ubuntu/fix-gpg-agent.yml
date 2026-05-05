@@ -19,7 +19,7 @@
   tags: wsl-environment
 
 - name: "Configure GPG for users"
-  ansible.builtin.include_tasks: configure_user_gpg.yml
+  ansible.builtin.include_tasks: configure-user-gpg.yml
   loop: "{{ system_users | default([]) }}"
   loop_control:
     loop_var: gpg_user

@@ -1,9 +1,6 @@
 ---
 # configure_user_gpg.yml - Configure GPG for a single user
 
-- debug: var=gpg_user.username
-  tags: always
-
 - name: "Get user home directory"
   become: true
   ansible.builtin.getent:

@@ -1,0 +1,4 @@
+---
+nodejs_version: "25.9.0"
+# nvm_commands:
+#   - "nvm exec default npm install"

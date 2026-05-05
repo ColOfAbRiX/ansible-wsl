@@ -16,13 +16,42 @@ import random
 
 # TODO: Use real username for ssh-key name
 
-# Secret definitions with metadata
+# Secret definitions with metadata - grouped by category
+# Each secret has: description, is_password (confirmation needed), required (must have value)
 SECRETS_SCHEMA = {
-    "ansible_sudo_pass": ("SUDO (Linux root) password", True),
-    "ssh_key_passphrase": ("SSH private key passphrase", True),
-    "gpg_key_passphrase": ("Passpharse for the main GPG key", True),
-    "sonatype_user": ("Sonatype user", False),
-    "sonatype_password": ("Sonatype password", True),
+    "System Secrets": {
+        "ansible_sudo_pass": {
+            "description": "SUDO (Linux root) password",
+            "is_password": True,
+            "required": True,
+        },
+    },
+    "Main SSH Key": {
+        "ssh_key_passphrase": {
+            "description": "SSH private key passphrase",
+            "is_password": True,
+            "required": True,
+        },
+    },
+    "Main GPG Key": {
+        "gpg_key_passphrase": {
+            "description": "Passphrase for the main GPG key",
+            "is_password": True,
+            "required": True,
+        },
+    },
+    "SBT Publishing": {
+        "sonatype_user": {
+            "description": "Sonatype user",
+            "is_password": False,
+            "required": False,
+        },
+        "sonatype_password": {
+            "description": "Sonatype password",
+            "is_password": True,
+            "required": False,
+        },
+    },
 }
 
 def ask_user_password(secret_name: str, is_password: bool = True) -> str:
@@ -120,20 +149,11 @@ def write_secrets_yaml(secrets_dict: dict, output_path: Path) -> None:
     # Build the YAML content with comments
     content_parts = ["---"]
 
-    # Group secrets with comments
-    groups = {
-        "System SUDO and SSH": [
-            "ansible_sudo_pass", "ssh_key_passphrase"
-        ],
-        "SBT Publishing": [
-            "gpg_key_passphrase", "sonatype_user", "sonatype_password"
-        ]
-    }
-
-    for group_name, keys in groups.items():
+    # Iterate over groups in order defined in SECRETS_SCHEMA
+    for group_name, secrets in SECRETS_SCHEMA.items():
         content_parts.append(f"\n# {group_name}")
-        for key in keys:
-            if key in secrets_dict:
+        for key, _ in secrets.items():
+            if key in secrets_dict and secrets_dict[key]:
                 # Use PyYAML's proper escaping for all special characters
                 escaped_value = yaml_escape_value(secrets_dict[key])
                 content_parts.append(f"{key}: {escaped_value}")
@@ -152,26 +172,40 @@ def collect_secrets(existing_secrets: dict) -> tuple[dict, bool]:
     secrets_dict = existing_secrets.copy()
     has_changes = False
 
-    # Auto-set audience values from hardcoded constants (not user-configurable)
     print("\n" + "=" * 60)
     print("Setting up repository secrets")
     print("=" * 60)
 
-    for key, (description, is_password) in SECRETS_SCHEMA.items():
-        if key in secrets_dict and secrets_dict[key]:
-            # If exists, ask if user wants to override
-            display_value = "********" if is_password else secrets_dict[key][:20] + "..."
-            if len(secrets_dict[key]) <= 20 or is_password:
-                 display_value = "********" if is_password else secrets_dict[key]
+    # Iterate over groups and secrets in order defined in SECRETS_SCHEMA
+    for _, secrets in SECRETS_SCHEMA.items():
+        for key, config in secrets.items():
+            description = config["description"]
+            is_password = config["is_password"]
+            required = config["required"]
 
-            override = input(f"Override existing {key} ({display_value})? [y/N]: ").strip().lower()
-            if override != 'y':
-                print(f"= Keeping existing value")
-                continue
+            # Check if key exists and has a value
+            if key in secrets_dict and secrets_dict[key]:
+                # If exists, ask if user wants to override
+                display_value = "********" if is_password else secrets_dict[key][:20] + "..."
+                if len(secrets_dict[key]) <= 20 or is_password:
+                    display_value = "********" if is_password else secrets_dict[key]
 
-        # Collect new value
-        secrets_dict[key] = ask_user_password(description, is_password)
-        has_changes = True
+                override = input(f"Override existing {key} ({display_value})? [y/N]: ").strip().lower()
+                if override != 'y':
+                    print(f"=> Keeping existing value\n")
+                    continue
+            elif not required:
+                # Optional secret - ask if user wants to configure
+                configure = input(f"Configure optional {key}? [y/N]: ").strip().lower()
+                if configure != 'y':
+                    # Remove existing value if present and user chose not to configure
+                    if key in secrets_dict:
+                        del secrets_dict[key]
+                    continue
+
+            # Collect new value
+            secrets_dict[key] = ask_user_password(description, is_password)
+            has_changes = True
 
     return secrets_dict, has_changes
 
@@ -180,7 +214,7 @@ def generate_vault_password(vault_path: Path) -> None:
     Generate a random vault password file if it doesn't exist.
     """
     if vault_path.exists():
-        print(f"\nvault password file already exists: {vault_path}")
+        print(f"\nVault password file already exists: {vault_path}")
         return
 
     print(f"\nCreating vault.txt file with random password")
