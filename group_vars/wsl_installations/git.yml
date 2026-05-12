@@ -13,6 +13,12 @@ main_user_git:
     init:
       defaultBranch: main
 
+git_delta_config:
+  features: 'side-by-side line-numbers decorations'
+  syntax-theme: 'Monokai Extended'
+  navigate: "true"
+  dark: "true"
+
 git_system_config:
   core:
     editor: "vim"
@@ -29,6 +35,10 @@ git_system_config:
     untrackedcache: "true"
     # Performance, see https://linuxvox.com/blog/why-is-git-on-wsl2-with-soucetree-so-slow-for-me/
     fscache: "true"
+    # Custom pager
+    pager: "{{ 'delta' if 'delta' in better_shell_tools_list else omit }}"
+  delta:
+    "{{ git_delta_config if 'delta' in better_shell_tools_list else omit }}"
   user:
     name: "{{ git_username }}"
     email: "{{ git_email }}"

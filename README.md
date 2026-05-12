@@ -67,7 +67,7 @@ If you have existing SSH or GPG keys read the [SSH & GPG Keys section](#ssh--gpg
 Open **PowerShell** inside this repository root directory and run:
 
 ```powershell
-.\run_all.ps1
+.\run.ps1
 ```
 
 If you have installed more than one Linux distribution the script will ask you to choose where you want to install it.
@@ -162,6 +162,7 @@ KeeAgent is a plugin for KeePass that allows you to use your SSH keys stored in 
 | **SSL Certificates** | Certificate installation                                             |
 | **Git**              | System-wide and per-user configuration with aliases                  |
 | **Java**             | JDK installation                                                     |
+| | **Better Shell Tools** | Modern CLI tools (eza, bat, delta, procs, btop, bandwhich, rustnet, trippy, etc.) |
 | **Scala**            | Scala, SBT, and Ammonite                                             |
 | **Docker**           | Docker Engine setup                                                  |
 
