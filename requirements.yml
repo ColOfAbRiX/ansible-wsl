@@ -71,7 +71,7 @@ roles:
 
   - name: sbt
     src: https://github.com/ColOfAbRiX/role-sbt.git
-    version: "1.0.0"
+    version: "1.0.1"
     scm: git
 
   - name: scala

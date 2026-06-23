@@ -2,6 +2,8 @@
 # Sonatpye configuratiob
 main_user_sonatype: {}
 
+sbt_global_version: 1.12.12
+
 sbt_global_opts:
   global.base: "/var/cache/{{ lnx_user }}/.sbt"
   boot.directory: "/var/cache/{{ lnx_user }}/.sbt/boot"
