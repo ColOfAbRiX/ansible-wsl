@@ -1,0 +1,3 @@
+---
+wsl_config_winconfig:
+  virtiofs: "true"
