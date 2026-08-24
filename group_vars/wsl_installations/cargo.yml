@@ -1,0 +1,3 @@
+---
+# Rust/Cargo version to install
+cargo_rust_version: "1.85.0"

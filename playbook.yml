@@ -59,6 +59,8 @@
     - role: sbt
       sbt_users: "{{ system_users }}"
     - role: scala
+    - role: cargo
+      cargo_users: "{{ system_users }}"
     - role: nvm
       become: false
       tags: nvm

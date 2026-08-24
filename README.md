@@ -167,6 +167,7 @@ KeeAgent is a plugin for KeePass that allows you to use your SSH keys stored in 
 | **Java**             | JDK installation                                                     |
 | **SBT**              | SBT build tool with global configuration                             |
 | **Scala**            | Scala compiler and Ammonite REPL                                     |
+| **Cargo / Rust**     | Rust toolchain and Cargo package manager via rustup                   |
 | **NVM / Node.js**    | Node Version Manager with Node.js installation                       |
 | **Docker**           | Docker Engine setup                                                  |
 | **Starship**         | Cross-shell prompt customization                                     |

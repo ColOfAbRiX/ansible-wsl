@@ -79,6 +79,11 @@ roles:
     version: "3.0.0"
     scm: git
 
+  - name: cargo
+    src: https://github.com/ColOfAbRiX/role-cargo.git
+    version: "1.0.0"
+    scm: git
+
   - name: nvm
     src: https://github.com/morgangraphics/ansible-role-nvm.git
     version: "v2.0.0"
