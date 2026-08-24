@@ -155,16 +155,22 @@ KeeAgent is a plugin for KeePass that allows you to use your SSH keys stored in 
 | Component            | What it does                                                         |
 |----------------------|----------------------------------------------------------------------|
 | **WSL Integration**  | Hostname, wsl.conf, .wslconfig, Windows home mapping, daily cleanups |
+| **WSL Environment**  | GPG TTY fix, profile.d scripts, and WSL-specific customizations      |
 | **OpenSSH**          | SSH client/server with key management                                |
 | **Bash**             | Shell with aliases, autocomplete, history, and MOTD                  |
+| **Vim**              | Vim editor with airline theme and color configuration                |
 | **SSH Keys**         | Automatic key deployment and encryption                              |
 | **GPG Keys**         | GPG key import and trust configuration                               |
 | **SSL Certificates** | Certificate installation                                             |
+| **WSL KeeAgent**     | KeeAgent SSH agent integration with KeePass                          |
 | **Git**              | System-wide and per-user configuration with aliases                  |
 | **Java**             | JDK installation                                                     |
-| | **Better Shell Tools** | Modern CLI tools (eza, bat, delta, procs, btop, bandwhich, rustnet, trippy, etc.) |
-| **Scala**            | Scala, SBT, and Ammonite                                             |
+| **SBT**              | SBT build tool with global configuration                             |
+| **Scala**            | Scala compiler and Ammonite REPL                                     |
+| **NVM / Node.js**    | Node Version Manager with Node.js installation                       |
 | **Docker**           | Docker Engine setup                                                  |
+| **Starship**         | Cross-shell prompt customization                                     |
+| **Better Shell Tools** | Modern CLI tools (eza, bat, delta, procs, btop, bandwhich, rustnet, trippy, etc.) |
 
 ## Running Specific Components
 

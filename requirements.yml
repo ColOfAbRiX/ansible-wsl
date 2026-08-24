@@ -15,7 +15,7 @@ roles:
 
   - name: wsl-win-integration
     src: https://github.com/ColOfAbRiX/role-wsl-config.git
-    version: "2.0.0"
+    version: "2.0.1"
     scm: git
 
   # System tools

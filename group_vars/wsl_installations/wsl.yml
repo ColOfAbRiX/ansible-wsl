@@ -1,3 +1,4 @@
 ---
 wsl_config_winconfig:
-  virtiofs: "true"
+  wsl2:
+    virtiofs: "true"

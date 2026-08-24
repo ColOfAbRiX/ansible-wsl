@@ -1,4 +1,4 @@
 ---
 
 # Where to place SSL certificates in this repository
-ssl_store_path: data/ssl_certificates
+ssl_store_path: data/ssl_certs
